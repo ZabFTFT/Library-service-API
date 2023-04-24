@@ -1,3 +1,22 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from book_service.models import Book
+from book_service.serializers import BookSerializer, BookListSerializer, BookDetailSerializer, BookUpdateSerializer
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+    def get_serializer_class(self):
+
+        if self.action == "list":
+            return BookListSerializer
+
+        if self.action == "retrieve":
+            return BookDetailSerializer
+
+        if self.action in ["update", "partial_update"]:
+            return BookUpdateSerializer
+
+        return self.serializer_class
