@@ -4,12 +4,11 @@ from django.db import IntegrityError
 from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APIClient
 
-from book_service.serializers import BookDetailSerializer
 from .models import Borrowing, Book
-from .serializers import BorrowingListSerializer
-from book_service.urls import router
+from .serializers import BorrowingCreateSerializer
 
 BORROWINGS_URL_LIST = reverse("borrowing_service:borrowing-list")
 BORROWINGS_URL_DETAIL = reverse("borrowing_service:borrowing-detail", args=[1])
@@ -137,3 +136,23 @@ class BorrowingSerializerTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         book = Book.objects.get(pk=self.book.pk)
         self.assertEqual(book.inventory, self.book.inventory - 2)
+
+    def test_cant_create_borrowing_if_inventory_zero(self):
+        book = Book.objects.create(
+            title="Test Book",
+            author="Joane Rowling",
+            cover="HARD",
+            inventory=0,
+            daily_fee=0.50,
+        )
+
+        borrowing_data = {
+            "borrow_date": "2023-04-24",
+            "expected_return_date": "2023-05-01",
+            "actual_return_date": None,
+            "book": book.id,
+        }
+        serializer = BorrowingCreateSerializer(data=borrowing_data)
+
+        with self.assertRaises(ValidationError):
+            serializer.is_valid(raise_exception=True)
