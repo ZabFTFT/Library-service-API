@@ -18,15 +18,15 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Borrowing
         fields = (
-                "id",
-                "borrow_date",
-                "expected_return_date",
-                "actual_return_date",
-                "book",
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
         )
 
     def validate(self, attrs):
-        book = attrs['book']
+        book = attrs["book"]
         if book.inventory <= 0:
             raise serializers.ValidationError("Book is not available")
         return attrs

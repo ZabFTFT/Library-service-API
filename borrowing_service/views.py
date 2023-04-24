@@ -1,12 +1,12 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
 from borrowing_service.models import Borrowing
-from borrowing_service.serializers import (BorrowingListSerializer,
-                                           BorrowingSerializer,
-                                           BorrowingCreateSerializer)
+from borrowing_service.serializers import (
+    BorrowingListSerializer,
+    BorrowingSerializer,
+    BorrowingCreateSerializer,
+)
 
 
 class BorrowingsViewSet(viewsets.ModelViewSet):
@@ -20,10 +20,10 @@ class BorrowingsViewSet(viewsets.ModelViewSet):
             return BorrowingCreateSerializer
         return BorrowingSerializer
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def return_book(self, request, pk=None):
         borrowing = self.get_object()
-        borrowing.actual_return_date = request.data.get('actual_return_date')
+        borrowing.actual_return_date = request.data.get("actual_return_date")
         borrowing.save()
         borrowing.book.inventory -= 1
         borrowing.book.save()

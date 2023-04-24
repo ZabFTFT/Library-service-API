@@ -14,6 +14,7 @@ from book_service.urls import router
 BORROWINGS_URL_LIST = reverse("borrowing_service:borrowing-list")
 BORROWINGS_URL_DETAIL = reverse("borrowing_service:borrowing-detail", args=[1])
 
+
 class BorrowingModelTests(TestCase):
     def setUp(self):
         self.book = Book.objects.create(
@@ -24,7 +25,7 @@ class BorrowingModelTests(TestCase):
             daily_fee=0.50,
         )
         self.customer = get_user_model().objects.create_user(
-            email='testuser@example.com', password='testpass'
+            email="testuser@example.com", password="testpass"
         )
 
     def test_borrow_date_before_expected_return_date(self):
@@ -43,7 +44,7 @@ class BorrowingModelTests(TestCase):
             book=self.book,
             customer=self.customer,
             borrow_date=timezone.now(),
-            expected_return_date=timezone.now() - timezone.timedelta(days=1)
+            expected_return_date=timezone.now() - timezone.timedelta(days=1),
         )
         with self.assertRaises(IntegrityError):
             borrowing.save()
@@ -54,7 +55,7 @@ class BorrowingModelTests(TestCase):
             customer=self.customer,
             borrow_date=timezone.now(),
             expected_return_date=timezone.now() + timezone.timedelta(days=1),
-            actual_return_date=timezone.now() - timezone.timedelta(days=1)
+            actual_return_date=timezone.now() - timezone.timedelta(days=1),
         )
         with self.assertRaises(IntegrityError):
             borrowing.save()
@@ -65,7 +66,7 @@ class BorrowingModelTests(TestCase):
             customer=self.customer,
             borrow_date=timezone.now(),
             expected_return_date=timezone.now() + timezone.timedelta(days=1),
-            actual_return_date=timezone.now() - timezone.timedelta(days=1)
+            actual_return_date=timezone.now() - timezone.timedelta(days=1),
         )
         with self.assertRaises(IntegrityError):
             borrowing.save()
@@ -73,16 +74,15 @@ class BorrowingModelTests(TestCase):
 
 def borrowing_creating(book, customer):
     return Borrowing.objects.create(
-            book=book,
-            customer=customer,
-            borrow_date=timezone.now(),
-            expected_return_date=timezone.now() + timezone.timedelta(days=2),
-            actual_return_date=timezone.now() + timezone.timedelta(days=4)
-        )
+        book=book,
+        customer=customer,
+        borrow_date=timezone.now(),
+        expected_return_date=timezone.now() + timezone.timedelta(days=2),
+        actual_return_date=timezone.now() + timezone.timedelta(days=4),
+    )
 
 
 class BorrowingSerializerTest(TestCase):
-
     def setUp(self) -> None:
         self.book = Book.objects.create(
             title="Test Book",
@@ -93,7 +93,7 @@ class BorrowingSerializerTest(TestCase):
         )
 
         self.customer = get_user_model().objects.create_user(
-            email='testuser@example.com', password='testpass'
+            email="testuser@example.com", password="testpass"
         )
         self.client = APIClient()
         self.client.force_login(self.customer)
@@ -120,9 +120,9 @@ class BorrowingSerializerTest(TestCase):
                 "book": self.book.pk,
                 "customer": self.customer,
                 "borrow_date": timezone.now(),
-                "expected_return_date": timezone.now() + timezone.timedelta(
-                    days=2),
-            }
+                "expected_return_date": timezone.now()
+                + timezone.timedelta(days=2),
+            },
         )
         self.client.post(
             BORROWINGS_URL_LIST,
@@ -130,9 +130,9 @@ class BorrowingSerializerTest(TestCase):
                 "book": self.book.pk,
                 "customer": self.customer,
                 "borrow_date": timezone.now(),
-                "expected_return_date": timezone.now() + timezone.timedelta(
-                    days=2),
-            }
+                "expected_return_date": timezone.now()
+                + timezone.timedelta(days=2),
+            },
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         book = Book.objects.get(pk=self.book.pk)

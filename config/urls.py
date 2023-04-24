@@ -24,3 +24,4 @@ urlpatterns = [
     # path("customers_service/", include("customers_service.urls", namespace="customers_service")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
+
