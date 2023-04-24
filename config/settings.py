@@ -139,7 +139,9 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),  # TODO: change token lifetime to 5 min
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        days=1
+    ),  # TODO: change token lifetime to 5 min
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
 }
