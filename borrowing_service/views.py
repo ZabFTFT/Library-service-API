@@ -3,9 +3,10 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from models import Borrowing
-from serializers import (BorrowingListSerializer,
-                         BorrowingSerializer)
+from borrowing_service.models import Borrowing
+from borrowing_service.serializers import (BorrowingListSerializer,
+                                           BorrowingSerializer,
+                                           BorrowingCreateSerializer)
 
 
 class BorrowingsViewSet(viewsets.ModelViewSet):
@@ -15,6 +16,8 @@ class BorrowingsViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return BorrowingListSerializer
+        if self.action == "create":
+            return BorrowingCreateSerializer
         return BorrowingSerializer
 
     @action(detail=True, methods=['post'])
@@ -27,11 +30,15 @@ class BorrowingsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(borrowing)
         return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        borrowing = serializer.save()
-        borrowing.book.inventory -= 1
-        borrowing.book.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=201, headers=headers)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     borrowing = serializer.save()
+    #     borrowing.book.inventory -= 1
+    #     borrowing.book.save()
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=201, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(customer=self.request.user)
+

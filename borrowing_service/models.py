@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.db.models import CheckConstraint, Q
+from book_service.models import Book
 
 
 class Borrowing(models.Model):
@@ -8,9 +9,9 @@ class Borrowing(models.Model):
     expected_return_date = models.DateTimeField()
     actual_return_date = models.DateTimeField(null=True)
     book = models.ForeignKey(
-        "Book", on_delete=models.CASCADE
+        Book, on_delete=models.CASCADE
     )
-    user = models.ForeignKey(
+    customer = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
 

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from views import BorrowingsViewSet
+from borrowing_service.views import BorrowingsViewSet
 
 router = routers.DefaultRouter()
 router.register("borrowings", BorrowingsViewSet, basename="borrowings")
