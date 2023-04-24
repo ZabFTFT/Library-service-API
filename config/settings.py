@@ -80,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-# AUTH_USER_MODEL = "customers_service.User"
+AUTH_USER_MODEL = "customers_service.Customer"
 
 WSGI_APPLICATION = "config.wsgi.application"
 
