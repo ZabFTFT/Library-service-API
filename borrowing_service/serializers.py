@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from book_service.serializers import BookDetailSerializer
 from borrowing_service.models import Borrowing
 
 
@@ -9,8 +11,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
 
 class BorrowingListSerializer(BorrowingSerializer):
-    pass
-    # book = BookDetailSerializer(many=False, read_only=True)
+    book = BookDetailSerializer(many=False, read_only=True)
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
