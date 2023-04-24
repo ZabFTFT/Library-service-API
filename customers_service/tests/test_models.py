@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from customers_service.models import Customer
 
 
 class CustomerModelTests(TestCase):
