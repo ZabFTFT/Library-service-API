@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from payment_service.models import Payment
 from payment_service.serializers import (
@@ -10,6 +11,7 @@ from payment_service.serializers import (
 
 
 class PaymentView(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = Payment.objects.all()
@@ -22,5 +24,7 @@ class PaymentView(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            PaymentListSerializer
+            return PaymentListSerializer
+        if self.action == "create":
+            pass
         return PaymentSerializer
