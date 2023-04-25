@@ -45,15 +45,16 @@ class BorrowingsListViewSet(BorrowingsViewSet):
         queryset = Borrowing.objects.all()
 
         if is_active:
+
             if not customer.is_staff:
-                return Borrowing.objects.filter(customer=customer.id, actual_return_date__isnull=True)
+                return queryset.filter(customer=customer.id, actual_return_date__isnull=True)
             queryset = queryset.filter(actual_return_date__isnull=True)
 
         if customer.is_staff:
             user_id = self.request.query_params.get('user_id')
 
             if user_id:
-                queryset = queryset.filter(user_id=user_id)
+                queryset = queryset.filter(customer_id=user_id)
             return queryset
 
         return Borrowing.objects.filter(customer=customer.id, )
