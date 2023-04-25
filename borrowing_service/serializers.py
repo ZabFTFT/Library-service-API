@@ -1,9 +1,14 @@
 from django.utils import timezone
+import datetime
+
+
+import asyncio
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from book_service.serializers import BookDetailSerializer
 from borrowing_service.models import Borrowing
+from notification.notifications import send_notification
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -27,6 +32,22 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "book",
         )
 
+    def _create_message(self, validated_data):
+        customer = self.context.get("request").user
+        book = validated_data.get("book").title
+        expected_return_date = validated_data.get(
+            "expected_return_date"
+        ).strftime("%Y-%m-%d %H:%M")
+        current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        message_text = (
+            f"user: {customer.email}\n"
+            f"took: {book}\n"
+            f"borrow date: {current_date}\n"
+            f"expected return date: {expected_return_date}\n"
+        )
+
+        return message_text
+
     def validate(self, attrs):
         book = attrs["book"]
         if book.inventory <= 0:
@@ -37,6 +58,9 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         borrowing = Borrowing.objects.create(**validated_data)
         borrowing.book.inventory -= 1
         borrowing.book.save()
+        asyncio.run(
+            send_notification(message_text=self._create_message(validated_data))
+        )
         return borrowing
 
 
