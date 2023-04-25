@@ -80,11 +80,11 @@ class BorrowingSerializerTest(TestCase):
             daily_fee=0.50,
         )
 
-        self.customer = get_user_model().objects.create_user(
+        self.customer = get_user_model().objects.create_superuser(
             email="testuser@example.com", password="testpass"
         )
         self.client = APIClient()
-        self.client.force_login(self.customer)
+        self.client.force_authenticate(self.customer)
 
     def test_list_borrowings(self):
         borrowing_creating(self.book, self.customer)
@@ -116,7 +116,7 @@ class BorrowingSerializerTest(TestCase):
             BORROWINGS_URL_LIST,
             data={
                 "book": self.book.pk,
-                "customer": self.customer,
+                "customer": self.customer.pk,
                 "borrow_date": timezone.now(),
                 "expected_return_date": timezone.now()
                 + timezone.timedelta(days=2),
