@@ -57,7 +57,6 @@ class BorrowingDetailSerializer(BorrowingSerializer):
         )
 
     def update(self, instance, validated_data):
-
         borrowing = Borrowing.objects.get(id=instance.id)
         if borrowing.actual_return_date:
             raise ValidationError
