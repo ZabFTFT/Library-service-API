@@ -31,7 +31,7 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost:6379"]
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -123,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Kiev"
 
 USE_I18N = True
 
@@ -153,11 +153,10 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
 }
 
-
 Q_CLUSTER = {
-    "name": "library_service_api",
+    "name": "myproject",
     "workers": 4,
-    "timeout": 60,
+    "timeout": 90,
     "retry": 180,
     "queue_limit": 50,
     "bulk": 10,
@@ -166,6 +165,5 @@ Q_CLUSTER = {
         "host": "localhost",
         "port": 6379,
         "db": 0,
-        "password": os.getenv("REDIS_PASSWORD"),
     },
 }

@@ -1,15 +1,15 @@
 from django.utils import timezone
 import datetime
 
-import asyncio
+
+from django_q.tasks import async_task
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from book_service.serializers import BookDetailSerializer
 from borrowing_service.models import Borrowing
-from notification.notifications import send_notification
 
-loop = asyncio.get_event_loop()
+from notification.notifications import send_notification
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -60,7 +60,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         borrowing.book.inventory -= 1
         borrowing.book.save()
         message_text = self._create_message(validated_data)
-        loop.run_until_complete(send_notification(message_text))
+        async_task(send_notification(message_text))
         return borrowing
 
 
