@@ -9,8 +9,13 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework_simplejwt",
     "rest_framework",
+    "django_q",
     "drf_spectacular",
     "debug_toolbar",
     "book_service",
@@ -145,4 +151,21 @@ SIMPLE_JWT = {
     ),  # TODO: change token lifetime to 5 min
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
+}
+
+
+Q_CLUSTER = {
+    "name": "library_service_api",
+    "workers": 4,
+    "timeout": 60,
+    "retry": 180,
+    "queue_limit": 50,
+    "bulk": 10,
+    "orm": "default",
+    "redis": {
+        "host": "localhost",
+        "port": 6379,
+        "db": 0,
+        "password": os.getenv("REDIS_PASSWORD"),
+    },
 }
