@@ -39,7 +39,7 @@ class UnauthenticatedBookApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_list_movies(self):
+    def test_list_books(self):
         sample_book()
         sample_book()
 
@@ -61,7 +61,7 @@ class AuthenticatedBookApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-    def test_retrieve_movie_detail(self):
+    def test_retrieve_book_detail(self):
         book = sample_book()
 
         url = detail_url(book.id)
@@ -71,7 +71,7 @@ class AuthenticatedBookApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 
-    def test_create_movie_forbidden(self):
+    def test_create_book_forbidden(self):
         payload = {
             "title": "Sample book",
             "author": "Sample author",
@@ -87,8 +87,8 @@ class AuthenticatedBookApiTests(TestCase):
 class AdminBookApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create_user(
-            "admin@admin.com", "testpass", is_staff=True
+        self.user = get_user_model().objects.create_superuser(
+            "admin@admin.com", "testpass"
         )
         self.client.force_authenticate(self.user)
 
@@ -96,9 +96,9 @@ class AdminBookApiTests(TestCase):
         payload = {
             "title": "Sample book",
             "author": "Sample author",
-            "cover": "Hard",
+            "cover": "HARD",
             "inventory": 3,
-            "daily_fee": 3.50
+            "daily_fee": 3.50,
         }
         res = self.client.post(BOOK_URL, payload)
 
@@ -126,4 +126,4 @@ class AdminBookApiTests(TestCase):
 
         res = self.client.delete(url)
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
