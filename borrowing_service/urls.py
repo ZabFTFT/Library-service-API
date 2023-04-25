@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from borrowing_service.views import BorrowingsViewSet
+from borrowing_service.views import BorrowingsViewSet, BorrowingsListViewSet
 
 router = routers.DefaultRouter()
-router.register("borrowings", BorrowingsViewSet, basename="borrowings")
+router.register("borrowings", BorrowingsListViewSet, basename="borrowings")
 
 
 urlpatterns = [
