@@ -6,7 +6,7 @@ from rest_framework.settings import api_settings
 
 from customers_service.serializers import (
     CustomerManageSerializer,
-    AuthTokenSerializer,
+    # AuthTokenSerializer,
     CustomerCreateSerializer,
     CustomerChangePasswordSerializer,
 )
@@ -29,8 +29,3 @@ class ChangeCustomerPasswordView(generics.UpdateAPIView):
 
     def get_object(self):
         return self.request.user
-
-
-class CreateTokenView(ObtainAuthToken):
-    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
-    serializer_class = AuthTokenSerializer
