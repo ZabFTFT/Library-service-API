@@ -14,8 +14,3 @@ bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
 
 async def send_notification(message_text: str) -> None:
     await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=message_text)
-
-
-if __name__ == "__main__":
-    message = "New borrowing created."
-    asyncio.run(send_notification(message))
