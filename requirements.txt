@@ -17,3 +17,5 @@ flake8==6.0.0
 flake8-quotes==3.3.2
 flake8-variables-names==0.0.5
 pep8-naming==0.13.3
+python-telegram-bot==20.2
+python-dotenv~=1.0.0
