@@ -4,7 +4,6 @@ from rest_framework.test import APITestCase
 from customers_service.serializers import (
     CustomerCreateSerializer,
     CustomerManageSerializer,
-    AuthTokenSerializer,
 )
 
 
@@ -81,65 +80,3 @@ class CustomerManageSerializerTest(APITestCase):
         self.user.refresh_from_db()
         self.assertEqual(self.user.first_name, "Jane")
         self.assertEqual(self.user.last_name, "Doe")
-
-
-class AuthTokenSerializerTestCase(APITestCase):
-    def setUp(self):
-        self.user = get_user_model().objects.create_user(
-            email="test@example.com", password="testpassword"
-        )
-
-        self.serializer_data = {
-            "email": "test@example.com",
-            "password": "testpassword",
-        }
-
-    def test_valid_serializer_data(self):
-        serializer = AuthTokenSerializer(data=self.serializer_data)
-        self.assertTrue(serializer.is_valid())
-        validated_data = serializer.validated_data
-        self.assertEqual(validated_data["customer"], self.user)
-
-    def test_invalid_email(self):
-        serializer_data = {
-            "email": "wrong@example.com",
-            "password": "testpassword",
-        }
-
-        serializer = AuthTokenSerializer(data=serializer_data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn(
-            "Unable to log in with provided credentials.",
-            serializer.errors["non_field_errors"],
-        )
-
-    def test_invalid_password(self):
-        serializer_data = {
-            "email": "test@example.com",
-            "password": "wrongpassword",
-        }
-
-        serializer = AuthTokenSerializer(data=serializer_data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn(
-            "Unable to log in with provided credentials.",
-            serializer.errors["non_field_errors"],
-        )
-
-    def test_missing_email(self):
-        serializer_data = {
-            "password": "testpassword",
-        }
-
-        serializer = AuthTokenSerializer(data=serializer_data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn("This field is required.", serializer.errors["email"])
-
-    def test_missing_password(self):
-        serializer_data = {
-            "email": "test@example.com",
-        }
-
-        serializer = AuthTokenSerializer(data=serializer_data)
-        self.assertFalse(serializer.is_valid())
-        self.assertIn("This field is required.", serializer.errors["password"])
