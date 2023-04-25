@@ -1,6 +1,5 @@
 from django.utils import timezone
 import datetime
-from django_q.tasks import async_task, result
 
 import asyncio
 from rest_framework import serializers
