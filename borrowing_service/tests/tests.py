@@ -7,8 +7,8 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APIClient
 
-from .models import Borrowing, Book
-from .serializers import BorrowingCreateSerializer
+from borrowing_service.models import Borrowing, Book
+from borrowing_service.serializers import BorrowingCreateSerializer
 
 BORROWINGS_URL_LIST = reverse("borrowing_service:borrowing-list")
 BORROWINGS_URL_DETAIL = reverse("borrowing_service:borrowing-detail", args=[1])
@@ -49,17 +49,6 @@ class BorrowingModelTests(TestCase):
             borrowing.save()
 
     def test_actual_return_date_after_borrow_date(self):
-        borrowing = Borrowing(
-            book=self.book,
-            customer=self.customer,
-            borrow_date=timezone.now(),
-            expected_return_date=timezone.now() + timezone.timedelta(days=1),
-            actual_return_date=timezone.now() - timezone.timedelta(days=1),
-        )
-        with self.assertRaises(IntegrityError):
-            borrowing.save()
-
-    def test_actual_return_date_after_expected_return_date(self):
         borrowing = Borrowing(
             book=self.book,
             customer=self.customer,
