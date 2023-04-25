@@ -17,7 +17,7 @@ def sample_book(**params):
         "author": "Sample author",
         "cover": "Hard",
         "inventory": 3,
-        "daily_fee": 3.50
+        "daily_fee": 3.50,
     }
     defaults.update(params)
 
@@ -77,7 +77,7 @@ class AuthenticatedBookApiTests(TestCase):
             "author": "Sample author",
             "cover": "Hard",
             "inventory": 3,
-            "daily_fee": 3.50
+            "daily_fee": 3.50,
         }
         res = self.client.post(BOOK_URL, payload)
 
@@ -108,10 +108,7 @@ class AdminBookApiTests(TestCase):
             self.assertEqual(payload[key], getattr(book, key))
 
     def test_put_book(self):
-        payload = {
-            "inventory": 5,
-            "daily_fee": 1.50
-        }
+        payload = {"inventory": 5, "daily_fee": 1.50}
 
         book = sample_book()
         url = detail_url(book.id)
