@@ -45,7 +45,6 @@ class BorrowingsListViewSet(BorrowingsViewSet):
         queryset = Borrowing.objects.all()
 
         if is_active:
-
             if not customer.is_staff:
                 return queryset.filter(customer=customer.id, actual_return_date__isnull=True)
             queryset = queryset.filter(actual_return_date__isnull=True)
