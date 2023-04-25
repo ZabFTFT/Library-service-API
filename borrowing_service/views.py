@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -7,6 +9,7 @@ from borrowing_service.serializers import (
     BorrowingListSerializer,
     BorrowingSerializer,
     BorrowingCreateSerializer,
+    BorrowingDetailSerializer,
 )
 
 
@@ -21,17 +24,8 @@ class BorrowingsViewSet(viewsets.ModelViewSet):
             return BorrowingListSerializer
         if self.action == "create":
             return BorrowingCreateSerializer
-        return BorrowingSerializer
 
-    @action(detail=True, methods=["post"])
-    def return_book(self, request, pk=None):
-        borrowing = self.get_object()
-        borrowing.actual_return_date = request.data.get("actual_return_date")
-        borrowing.save()
-        borrowing.book.inventory -= 1
-        borrowing.book.save()
-        serializer = self.get_serializer(borrowing)
-        return Response(serializer.data)
+        return BorrowingDetailSerializer
 
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)

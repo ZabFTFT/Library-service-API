@@ -1,4 +1,6 @@
+from django.utils import timezone
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from book_service.serializers import BookDetailSerializer
 from borrowing_service.models import Borrowing
@@ -34,5 +36,31 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         borrowing = Borrowing.objects.create(**validated_data)
         borrowing.book.inventory -= 1
+        borrowing.book.save()
+        return borrowing
+
+
+class BorrowingDetailSerializer(BorrowingSerializer):
+    class Meta:
+        model = Borrowing
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+        )
+        read_only_fields = (
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+        )
+
+    def update(self, instance, validated_data):
+        borrowing = Borrowing.objects.get(id=instance.id)
+        if borrowing.actual_return_date:
+            raise ValidationError
+        borrowing.actual_return_date = timezone.now()
+        borrowing.book.inventory += 1
         borrowing.book.save()
         return borrowing
