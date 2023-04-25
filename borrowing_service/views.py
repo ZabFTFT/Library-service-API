@@ -1,12 +1,12 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
 from borrowing_service.models import Borrowing
-from borrowing_service.serializers import (BorrowingListSerializer,
-                                           BorrowingSerializer,
-                                           BorrowingCreateSerializer)
+from borrowing_service.serializers import (
+    BorrowingListSerializer,
+    BorrowingSerializer,
+    BorrowingCreateSerializer,
+)
 
 
 class BorrowingsViewSet(viewsets.ModelViewSet):
@@ -20,25 +20,15 @@ class BorrowingsViewSet(viewsets.ModelViewSet):
             return BorrowingCreateSerializer
         return BorrowingSerializer
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def return_book(self, request, pk=None):
         borrowing = self.get_object()
-        borrowing.actual_return_date = request.data.get('actual_return_date')
+        borrowing.actual_return_date = request.data.get("actual_return_date")
         borrowing.save()
         borrowing.book.inventory -= 1
         borrowing.book.save()
         serializer = self.get_serializer(borrowing)
         return Response(serializer.data)
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     borrowing = serializer.save()
-    #     borrowing.book.inventory -= 1
-    #     borrowing.book.save()
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status=201, headers=headers)
-
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)
-
