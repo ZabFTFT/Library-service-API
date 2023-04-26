@@ -1,4 +1,6 @@
 from django.utils import timezone
+from django.utils.datetime_safe import datetime
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -55,6 +57,7 @@ class BorrowingsListViewSet(BorrowingsViewSet):
             customer=customer.id,
         )
 
+
     @action(detail=True, methods=["post", "get"])
     def return_book(self, request, pk=None):
         borrowing = self.get_object()
@@ -66,3 +69,24 @@ class BorrowingsListViewSet(BorrowingsViewSet):
         borrowing.save()
         serializer = self.get_serializer(borrowing)
         return Response(serializer.data)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "DateTime",
+                type=str,
+                description="actual return book date in"
+                            "format:YYYY-MM-DDTHH:MM:SSZ",
+                required=False,
+            ),
+            OpenApiParameter(
+                "DateTimeParameter",
+                type=str,
+                description="expected return book date in"
+                            "format:YYYY-MM-DDTHH:MM:SSZ",
+                required=False,
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
