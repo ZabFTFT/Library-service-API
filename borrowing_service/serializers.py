@@ -55,12 +55,3 @@ class BorrowingDetailSerializer(BorrowingSerializer):
             "actual_return_date",
             "book",
         )
-
-    def update(self, instance, validated_data):
-        borrowing = Borrowing.objects.get(id=instance.id)
-        if borrowing.actual_return_date:
-            raise ValidationError
-        borrowing.actual_return_date = timezone.now()
-        borrowing.book.inventory += 1
-        borrowing.book.save()
-        return borrowing
