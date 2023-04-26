@@ -73,6 +73,12 @@ class BorrowingsListViewSet(BorrowingsViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter(
+                "String Parameter",
+                type=str,
+                description="Book name",
+                required=False,
+            ),
+            OpenApiParameter(
                 "DateTime",
                 type=str,
                 description="actual return book date in"
