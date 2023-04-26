@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets
 
 from book_service.models import Book
@@ -28,3 +29,59 @@ class BookViewSet(viewsets.ModelViewSet):
             return BookUpdateSerializer
 
         return self.serializer_class
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "title",
+                type=str,
+                description="Book title",
+                required=False,
+            ),
+            OpenApiParameter(
+                "author",
+                type=str,
+                description="author",
+                required=False,
+            )
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "title",
+                type=str,
+                description="Book title",
+                required=False,
+            ),
+            OpenApiParameter(
+                "author",
+                type=str,
+                description="author",
+                required=False,
+            ),
+            OpenApiParameter(
+                "cover",
+                type=str,
+                description="cover",
+                required=False,
+            ),
+            OpenApiParameter(
+                "inventory",
+                type=int,
+                description="inventory",
+                required=False,
+            ),
+            OpenApiParameter(
+                "daily_fee",
+                type=float,
+                description="daily_fee",
+                required=False,
+            ),
+        ]
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
