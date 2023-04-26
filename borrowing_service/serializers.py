@@ -41,6 +41,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         ).strftime("%Y-%m-%d %H:%M")
         current_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         message_text = (
+            "Borrowing!\n"
             f"user: {customer.email}\n"
             f"took: {book}\n"
             f"borrow date: {current_date}\n"

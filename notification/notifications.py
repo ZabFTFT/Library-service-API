@@ -20,12 +20,13 @@ def send_notification(message_text: str) -> None:
 
 
 def get_overdue_info():
-    overdue = timezone.now() - timezone.timedelta(days=1)
-    return Borrowing.objects.filter(expected_return_date__gte=overdue)
+    overdue = timezone.now()
+    return Borrowing.objects.filter(expected_return_date__lte=overdue)
 
 
 def make_massage(instance):
     return (
+        "Overdue!\n"
         f"email: {instance.customer.email}\n"
         f"book: {instance.book.title}\n"
         f"expected return date: {instance.expected_return_date.strftime('%Y-%m-%d %H:%M')}\n"
