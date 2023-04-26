@@ -9,8 +9,13 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,16 +29,15 @@ SECRET_KEY = (
 )
 
 STRIPE_SECRET_KEY = "sk_test_51N0giXIuU04V0CJIaWtU7IBvRfIWduDKI5rtA40rk7aLREboO2YpwGxBdqNoavc1xamJdeRAMoXQ0J3Cdt1iFwnH00zpbnaZec"
-ENDPOINT_SECRET = 'whsec_5cf035e6c8f7045dd2c684d343087f10d0a25477c61137407f4b19cce806dd5b'
-
-STRIPE_TEST_SECRET_KEY = "sk_test_51N0giXIuU04V0CJIaWtU7IBvRfIWduDKI5rtA40rk7aLREboO2YpwGxBdqNoavc1xamJdeRAMoXQ0J3Cdt1iFwnH00zpbnaZec"
-STRIPE_TEST_PUBLIC_KEY = "pk_test_51N0giXIuU04V0CJI1LYtigTCbVRsx72kINqMUe4qOxlK2MNNu7pZkQWpXHzwMzFXjKiWqV054lLQcbYA1ZrercBl00bUE27wXM"
+ENDPOINT_SECRET = (
+    "whsec_5cf035e6c8f7045dd2c684d343087f10d0a25477c61137407f4b19cce806dd5b"
+)
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost:6379"]
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -50,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework_simplejwt",
     "rest_framework",
+    "django_q",
     "drf_spectacular",
     "debug_toolbar",
     "book_service",
@@ -124,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Kiev"
 
 USE_I18N = True
 
@@ -147,9 +152,22 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(
-        days=1
-    ),  # TODO: change token lifetime to 5 min
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
+}
+
+Q_CLUSTER = {
+    "name": "myproject",
+    "workers": 4,
+    "timeout": 90,
+    "retry": 180,
+    "queue_limit": 50,
+    "bulk": 10,
+    "orm": "default",
+    "redis": {
+        "host": "localhost",
+        "port": 6379,
+        "db": 0,
+    },
 }
