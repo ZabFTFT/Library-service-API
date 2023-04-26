@@ -18,20 +18,25 @@ class Migration(migrations.Migration):
             model_name="borrowing",
             name="customer",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AddConstraint(
             model_name="borrowing",
             constraint=models.CheckConstraint(
-                check=models.Q(("borrow_date__lte", models.F("expected_return_date"))),
+                check=models.Q(
+                    ("borrow_date__lte", models.F("expected_return_date"))
+                ),
                 name="borrow_date_before_expected_return_date",
             ),
         ),
         migrations.AddConstraint(
             model_name="borrowing",
             constraint=models.CheckConstraint(
-                check=models.Q(("expected_return_date__gte", models.F("borrow_date"))),
+                check=models.Q(
+                    ("expected_return_date__gte", models.F("borrow_date"))
+                ),
                 name="expected_return_date_after_borrow_date",
             ),
         ),

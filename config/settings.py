@@ -28,6 +28,12 @@ SECRET_KEY = (
     "django-insecure-muw#!%#+%(5lhs8tt1h_)zquhlo8ci(y02j0vm7dh#5e^pmx_k"
 )
 
+STRIPE_SECRET_KEY = "sk_test_51N0giXIuU04V0CJIaWtU7IBvRfIWduDKI5rtA40rk7aLREboO2YpwGxBdqNoavc1xamJdeRAMoXQ0J3Cdt1iFwnH00zpbnaZec"
+ENDPOINT_SECRET = (
+    "whsec_5cf035e6c8f7045dd2c684d343087f10d0a25477c61137407f4b19cce806dd5b"
+)
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -147,9 +153,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(
-        days=1
-    ),  # TODO: change token lifetime to 5 min
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
 }
