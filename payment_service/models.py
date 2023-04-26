@@ -27,3 +27,6 @@ class Payment(models.Model):
         choices=PaymentType.choices,
         default=PaymentType.PAYMENT,
     )
+
+    class Meta:
+        default_related_name = "payments"
